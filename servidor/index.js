@@ -1,7 +1,8 @@
 import express from 'express';
-
+import cors from 'cors'
+import { useState } from 'react';
 const servidor = express()
-
+servidor.use(cors())
 servidor.use(express.json())
 
 const registros = [] // ""DB"" em tempo de execução
@@ -35,3 +36,11 @@ servidor.get('/registros', (req, res) => {
 servidor.listen(3000, () => {
     console.log("app tá ouvindo na porta padrão (3000)")
 })
+
+
+servidor.get('/', (req, res) => { 
+    res.status(200).json({ 
+        mensagem: "vamos nessa, servidor no ar", 
+        status: "ok 100%" 
+    }); 
+});
