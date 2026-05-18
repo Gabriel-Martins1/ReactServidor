@@ -3,79 +3,64 @@ import InputField from "./inputField";
 import Botao from "./BotaoEnviar";
 
 function FormularioCadastro() {
-  // const [nome, setnome] = useState('');
-  // const [email, setemail] = useState('');
-  // const [telefone, settelefone] = useState('');
-  // const [erro, setErro] = useState('');
-  // const [sucesso, setSucesso] = useState(false);
-  const [user, setUser] = useState({ nome: "", email: "", telefone: "" });
-  const [verificacao, setVerificacao] = useState({erro: "", sucesso:false})
-  const [registros, setRegistros] = useState([])
-  const BuscarRegistros = async() => {
+  const [user, setUser] = useState({ nome: "", email: "", telefone: "", nomeMae: "" });
+  const [verificacao, setVerificacao] = useState({ erro: "", sucesso: false });
+  const [registros, setRegistros] = useState([]);
 
-const BuscarRegistros = async () => {
-  try {
-    const response = await fetch('http://localhost:3000/registros');
-    const dados = await response.json();
-    setRegistros(dados);
-  } catch (error) {
-    console.error('Erro ao buscar registros:', error);
-  }
-};
-
-useEffect(() => {
-  BuscarRegistros();
-}, []);
-
-
+  // Função para buscar os registros no servidor backend
+  const BuscarRegistros = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/registros');
+      const dados = await response.json();
+      setRegistros(dados);
+    } catch (error) {
+      console.error('Erro ao buscar registros:', error);
+    }
+  };
 
   useEffect(() => {
-  fetch('http://localhost:3000/registros')
-  .then(res => res.json())
-  .then(dados => console.log(dados))
-}, [])
+    BuscarRegistros();
+  }, []);
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     if (user.nome.trim() === "") {
-      setVerificacao({erro: "O campo nome não pode ser vazio", sucesso: false})
-      return
+      setVerificacao({ erro: "O campo nome não pode ser vazio", sucesso: false });
+      return;
     }
 
     if (user.telefone.length !== 11) {     
-      setVerificacao({erro: "O campo de Telefone deve ter 11 digitos", sucesso: false})
-      return
+      setVerificacao({ erro: "O campo de Telefone deve ter 11 dígitos", sucesso: false });
+      return;
     }
 
-
-
-    setVerificacao({erro: "", sucesso: true});
-    console.log (user)
-    setUser({ nome: "", email: "", telefone: "" })  //envio para o banco
-
     try {
-  const resposta = await fetch("http://localhost:3000/registros", {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(nome, email, telefone)
-  });
-  const resultado = await resposta.json()
-  console.log(resultado)
+      const resposta = await fetch("http://localhost:3000/registros", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user) 
+      });
+      
+      const resultado = await resposta.json();
+      console.log(resultado);
 
-} catch (erro) {
-  console.log("erro ao conectar ao servidor", erro)
-}
+      setVerificacao({ erro: "", sucesso: true });
+      setUser({ nome: "", email: "", telefone: "", nomeMae: "" }); // Limpa o formulário
+      BuscarRegistros(); // Atualiza a lista após cadastrar
 
+    } catch (erro) {
+      console.log("Erro ao conectar ao servidor", erro);
+      setVerificacao({ erro: "Erro ao conectar ao servidor", sucesso: false });
+    }
   };
 
-
   return (
-    <div>
+    <div style={{ padding: '20px', color: '#fff' }}>
+      <h2>Formulário de Cadastro</h2>
       <form onSubmit={handleSubmit}>
-        { verificacao.erro && <p style={{ color: 'red' }}>{verificacao.erro }</p>}
-        {verificacao.sucesso  && <p style={{ color: 'green' }}> {"cadastrado com sucesso!"}</p>}
+        {verificacao.erro && <p style={{ color: 'red' }}>{verificacao.erro}</p>}
+        {verificacao.sucesso && <p style={{ color: 'green' }}>Cadastrado com sucesso!</p>}
 
         <InputField
           label="Nome"
@@ -83,25 +68,17 @@ const handleSubmit = async (e) => {
           name="nome"
           placeholder="Gabriel..."
           value={user.nome}
-          onChange={(e) => setUser(dados => ({
-            ...dados,
-            nome: e.target.value
-          }))}
+          onChange={(e) => setUser(dados => ({ ...dados, nome: e.target.value }))}
         />
 
-        <div>
-          <InputField
-            label="Telefone"
-            type="tel"
-            name="telefone"
-            placeholder="+55..."
-            value={user.telefone}
-            onChange={(e) => setUser(dados => ({
-            ...dados,
-            telefone: e.target.value
-          }))}
-          />
-        </div>
+        <InputField
+          label="Telefone"
+          type="tel"
+          name="telefone"
+          placeholder="11999999999"
+          value={user.telefone}
+          onChange={(e) => setUser(dados => ({ ...dados, telefone: e.target.value }))}
+        />
 
         <InputField
           label="E-mail"
@@ -109,33 +86,27 @@ const handleSubmit = async (e) => {
           name="email"
           placeholder="exemplo@email.com"
           value={user.email}
-          onChange={(e) => setUser(dados => ({
-            ...dados,
-            email: e.target.value
-          }))}
+          onChange={(e) => setUser(dados => ({ ...dados, email: e.target.value }))}
         />
 
-          
         <InputField
-          label="Nome da Mae"
+          label="Nome da Mãe"
           type="text"
-          name="NomeMae"
-          placeholder="ROberta"
-          value={user.a}
-          onChange={(e) => setUser(dados => ({
-            ...dados,
-            email: e.target.value
-          }))}
+          name="nomeMae"
+          placeholder="Roberta..."
+          value={user.nomeMae}
+          onChange={(e) => setUser(dados => ({ ...dados, nomeMae: e.target.value }))}
         />
-        <InputField label="Nome da mae" type="text" name="NomeMae" placeholder="Mãe..." />
 
         <Botao texto="Cadastrar" />
       </form>
 
-      <div>nome: {user.nome}</div>
-      <div>telefone: {user.telefone}</div>
+      <div style={{ marginTop: '20px' }}>
+        <p><strong>Nome digitado:</strong> {user.nome}</p>
+        <p><strong>Telefone digitado:</strong> {user.telefone}</p>
+      </div>
     </div>
   );
 }
-}
+
 export default FormularioCadastro;

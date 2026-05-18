@@ -5,7 +5,7 @@ import './App.css'
 import Cabecalho from './components/Cabecalho'
 import Footer from './components/Footer'
 import InputField from './components/inputField'
-import FormularioCadastro from './components/formulario'
+import FormularioCadastro from './components/Formulario'
 import { useEffect, useState } from 'react'
 import Contador from './components/Contador'
 function App() {
