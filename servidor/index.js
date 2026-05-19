@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors'
-import { useState } from 'react';
 const servidor = express()
 servidor.use(cors())
 servidor.use(express.json())

@@ -6,7 +6,6 @@ function FormularioCadastro() {
   const [user, setUser] = useState({ nome: "", email: "", telefone: "", nomeMae: "" });
   const [verificacao, setVerificacao] = useState({ erro: "", sucesso: false });
   const [registros, setRegistros] = useState([]);
-
   // Função para buscar os registros no servidor backend
   const BuscarRegistros = async () => {
     try {
@@ -19,10 +18,18 @@ function FormularioCadastro() {
   };
 
   useEffect(() => {
+    BuscarRegistros()
+  }, [])
+
+  useEffect(() => {
+    console.log(registros)
+  }, [registros])
+
+  useEffect(() => {
     BuscarRegistros();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handlerSubmit = async (e) => {
     e.preventDefault();
 
     if (user.nome.trim() === "") {
@@ -58,7 +65,7 @@ function FormularioCadastro() {
   return (
     <div style={{ padding: '20px', color: '#fff' }}>
       <h2>Formulário de Cadastro</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handlerSubmit}>
         {verificacao.erro && <p style={{ color: 'red' }}>{verificacao.erro}</p>}
         {verificacao.sucesso && <p style={{ color: 'green' }}>Cadastrado com sucesso!</p>}
 
