@@ -29,8 +29,12 @@ function FormularioCadastro() {
     BuscarRegistros();
   }, []);
 
+
+
   const handlerSubmit = async (e) => {
     e.preventDefault();
+
+
 
     if (user.nome.trim() === "") {
       setVerificacao({ erro: "O campo nome não pode ser vazio", sucesso: false });
@@ -41,6 +45,17 @@ function FormularioCadastro() {
       setVerificacao({ erro: "O campo de Telefone deve ter 11 dígitos", sucesso: false });
       return;
     }
+
+  for (let i = 0; i < registros.length; i++){
+    if (user.telefone === registros[i].telefone) {     
+      setVerificacao({ erro: "Telefone ja cadastrado", sucesso: false });
+      return;
+    }
+  }
+
+
+
+
 
     try {
       const resposta = await fetch("http://localhost:3000/registros", {
@@ -60,6 +75,9 @@ function FormularioCadastro() {
       console.log("Erro ao conectar ao servidor", erro);
       setVerificacao({ erro: "Erro ao conectar ao servidor", sucesso: false });
     }
+
+
+
   };
 
   return (
@@ -112,7 +130,23 @@ function FormularioCadastro() {
         <p><strong>Nome digitado:</strong> {user.nome}</p>
         <p><strong>Telefone digitado:</strong> {user.telefone}</p>
       </div>
+    
+<div>
+        {registros.length > 0 && (
+          <ul>
+            {registros.map((item, index) => (
+            <li key = {index}>
+              {item.nome} - {item.email}
+            </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+
+
     </div>
+
   );
 }
 
