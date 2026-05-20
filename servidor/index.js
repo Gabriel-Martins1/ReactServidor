@@ -10,13 +10,30 @@ servidor.post('/registros', (req, res) => {
     const dados = req.body //pega o corpo da requisição
 
 
+
+
     if(!dados.nome){
        return res.status(400).json({ 
         erro: "Campo de nome é obrigatorio!"
     }
     )}
 
-    
+        if(!dados.telefone){
+       return res.status(400).json({ 
+        erro: "Campo de Telefone é obrigatorio!"
+    }
+    )}
+
+        if(!dados.email){
+       return res.status(400).json({ 
+        erro: "Campo de E-mail é obrigatorio!"
+    }
+    )}
+
+    dados.nome = dados.nome.trim();
+    dados.email = dados.email.trim();
+    dados.telefone = dados.telefone.trim();
+
     for (let i = 0; i <registros.length; i++){
         if(registros[i].email.toLowerCase() === dados.email.toLowerCase()){
             return res.status(409).json({
@@ -26,7 +43,7 @@ servidor.post('/registros', (req, res) => {
 
     }
    
- if(registros.telefone !== 11 ){
+ if(dados.telefone.length !== 11 ){
  for (let i = 0; i <registros.length; i++){  
         if(registros[i].telefone === dados.telefone){
             return res.status(409).json({
