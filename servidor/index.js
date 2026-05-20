@@ -10,14 +10,32 @@ servidor.post('/registros', (req, res) => {
     const dados = req.body //pega o corpo da requisição
 
 
-
-
     if(!dados.nome){
        return res.status(400).json({ 
         erro: "Campo de nome é obrigatorio!"
     }
     )}
 
+    
+    for (let i = 0; i <registros.length; i++){
+        if(registros[i].email.toLowerCase() === dados.email.toLowerCase()){
+            return res.status(409).json({
+                erro: "Email Repetido"
+            })
+        }
+
+    }
+   
+ if(registros.telefone !== 11 ){
+ for (let i = 0; i <registros.length; i++){  
+        if(registros[i].telefone === dados.telefone){
+            return res.status(409).json({
+                erro:"Telefone Repetido"
+            })
+        }
+
+    }
+}
 
 
     console.log("dados da requisicao que o frontend me mandou:", (dados));

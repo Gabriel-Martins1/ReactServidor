@@ -46,20 +46,7 @@ function FormularioCadastro() {
       return;
     }
 
-  for (let i = 0; i < registros.length; i++){
-    if (user.telefone === registros[i].telefone) {     
-      setVerificacao({ erro: "Telefone ja cadastrado", sucesso: false });
-      return;
-    }
-  }
 
-
-  for (let i = 0; i < registros.length; i++){
-    if (user.email.toLowerCase() === registros[i].email.toLowerCase()) {     
-      setVerificacao({ erro: "E-mail ja cadastrado", sucesso: false });
-      return;
-    }
-  }
 
 
 
