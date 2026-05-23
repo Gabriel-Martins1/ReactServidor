@@ -4,4 +4,8 @@ function Botao({texto}) {
      )
 }
 
+
+
+
+
 export default Botao;

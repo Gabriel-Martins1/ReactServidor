@@ -43,7 +43,13 @@ servidor.post('/registros', (req, res) => {
 
     }
    
- if(dados.telefone.length !== 11 ){
+    if (dados.telefone.length !== 11) {
+    return res.status(400).json({
+        erro: "Telefone repetido. Deve  conter 11 digitos"
+    });
+    }
+
+
  for (let i = 0; i <registros.length; i++){  
         if(registros[i].telefone === dados.telefone){
             return res.status(409).json({
@@ -52,7 +58,7 @@ servidor.post('/registros', (req, res) => {
         }
 
     }
-}
+
 
 
     console.log("dados da requisicao que o frontend me mandou:", (dados));
@@ -79,7 +85,34 @@ servidor.listen(3000, () => {
 
 servidor.get('/', (req, res) => { 
     res.status(200).json({ 
-        mensagem: "vamos nessa, servidor no ar", 
+        mensagem: "servidor no ar", 
         status: "ok 100%" 
     }); 
 });
+
+
+servidor.delete("/registros/:id", (req, res) => {
+    const id = parseInt(req.params.id)
+
+    if (id < 0 || id>= registros.length) {
+        return res.status(404).json({erro: 'registro nao encontrado'})
+    }
+
+    registros.splice(id, 1)
+    res.status(200).json({mensagem: 'registro removido'})
+})
+
+
+servidor.put("/registros/:id", (req, res) =>{
+    const id = parseInt(req.params.id)
+    const dados = req.body;
+
+    if(id<0 || id>= registros.length) {
+        return res.status(404).json({erro: 'Regitro nao encontrado'})
+    }
+    if (!dados.nome || dados.nome.trim() === '') {
+        return res.status(400).json({erro: 'Nome é obrigatorio'})
+    }
+    registros[id] = dados; //substituindo o antifo array
+    res.status(200).json({mensagem: 'Registro atualizado', dados: registros[id]})
+})
