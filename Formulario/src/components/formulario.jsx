@@ -19,7 +19,7 @@ function FormularioCadastro() {
     setSucesso(false);
 
         if (user.telefone.length !== 11) {
-      setVerificacao({ erro: "O campo de Telefone deve ter 11 dígitos", sucesso: false });
+      setErroForm("O campo de Telefone deve ter 11 dígitos");
 
       return;
     }
