@@ -7,45 +7,39 @@ function FormularioCadastro() {
   const nomeRef = useRef(null)
   const [user, setUser] = useState({ nome: "", email: "", telefone: "", nomeMae: "" });
   const [verificacao, setVerificacao] = useState({ erro: "", sucesso: false });
+  const [erroForm, setErroForm] = useState("");
+  const [sucesso, setSucesso] = useState(false);
   const [indiceEditando, setIndiceEditando] = useState(null)
-  const [registros, setRegistros] = useState([]);
-  const { registros, carregando, criar, atualizar, deletar } = useRegistros
+  const { registros, carregando, criar, atualizar, deletar, erro } = useRegistros();
 
 
   const handlerSubmit = async (e) => {
     e.preventDefault();
+    setErroForm(""); 
+    setSucesso(false);
 
-
-    if (user.telefone.length !== 11) {
+        if (user.telefone.length !== 11) {
       setVerificacao({ erro: "O campo de Telefone deve ter 11 dígitos", sucesso: false });
 
       return;
     }
 
-    try {
+
+        try {
       if (indiceEditando !== null) {
-        await atualizar(indiceEditando, { nome, email, telefone });
+        await atualizar(indiceEditando, user);
       } else {
-        await criar({ nome, email, telefone, nomeMae});
+        await criar(user);
       }
+      setErroForm('') 
+    //atualizando  os campos do formulario apos o cadastro 
+      setUser({ nome: "", email: "", telefone: "", nomeMae: "" });
+      setIndiceEditando(null); // tirando do modo de edicao 
+      setSucesso(true);
+
     } catch (e) {
       setErroForm(e.message);
     }
-
-
-
-
-
-
-
-
-
-
-
-    const resultado = await resposta.json();
-    console.log(resultado);
-
-
 
   }
 
@@ -69,8 +63,13 @@ function FormularioCadastro() {
   };
 
 
-
-
+const handlerDeletar = async (index) => {
+  try{
+    await deletar(index);
+  } catch (e) {
+    setErroForm("nao foi possivel dewletar o registro")
+  }
+}
 
 
 
@@ -78,8 +77,8 @@ function FormularioCadastro() {
     <div style={{ padding: '20px', color: '#fff' }}>
       <h2>Formulário de Cadastro</h2>
       <form onSubmit={handlerSubmit}>
-        {verificacao.erro && <p style={{ color: 'red' }}>{verificacao.erro}</p>}
-        {verificacao.sucesso && <p style={{ color: 'green' }}>Cadastrado com sucesso!</p>}
+        {(erroForm || erro) && <p style={{ color: 'red' }}>{erroForm || erro}</p>}
+        {sucesso && <p style={{ color: 'green' }}>Operação realizada com sucesso!</p>}
 
         <InputField
           label="Nome"

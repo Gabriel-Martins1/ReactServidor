@@ -5,7 +5,7 @@ const BASE_URL = 'http://localhost:3000/registros';
 export function useRegistros() {
     const [registros, setRegistros] = useState([]);
     const [carregando, setCarregando] = useState(false); 
-    const [erroForm, setErroForm] = useState('');
+    const [erro, setErro] = useState('');
 
   
     const buscar = async () => {
